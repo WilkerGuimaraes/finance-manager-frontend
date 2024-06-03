@@ -1,16 +1,21 @@
 import { ThemeProvider } from "styled-components";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { defaultTheme } from "./styles/themes/default";
 import { GlobalStyle } from "./styles/global";
 
 import { Transactions } from "./pages/Transactions";
 
+const queryClient = new QueryClient();
+
 export function App() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <GlobalStyle />
 
-      <Transactions />
+      <QueryClientProvider client={queryClient}>
+        <Transactions />
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }
