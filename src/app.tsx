@@ -5,6 +5,7 @@ import { defaultTheme } from "./styles/themes/default";
 import { GlobalStyle } from "./styles/global";
 
 import { Transactions } from "./pages/Transactions";
+import { TransactionProvider } from "./contexts/TransactionsContext";
 
 const queryClient = new QueryClient();
 
@@ -14,7 +15,9 @@ export function App() {
       <GlobalStyle />
 
       <QueryClientProvider client={queryClient}>
-        <Transactions />
+        <TransactionProvider>
+          <Transactions />
+        </TransactionProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );
