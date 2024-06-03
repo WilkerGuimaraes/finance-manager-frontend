@@ -6,7 +6,7 @@ interface Transaction {
   description: string;
   type: "income" | "outcome";
   category: string;
-  price: string;
+  price: number;
   createdAt: string;
 }
 

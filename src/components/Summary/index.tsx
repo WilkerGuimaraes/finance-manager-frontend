@@ -10,14 +10,12 @@ export function Summary() {
 
   const summary = transactions.reduce(
     (acc, transaction) => {
-      const price = parseFloat(transaction.price);
-
       if (transaction.type === "income") {
-        acc.income += price;
-        acc.total += price;
+        acc.income += transaction.price;
+        acc.total += transaction.price;
       } else {
-        acc.outcome += price;
-        acc.total -= price;
+        acc.outcome += transaction.price;
+        acc.total -= transaction.price;
       }
 
       return acc;
