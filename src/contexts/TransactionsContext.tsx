@@ -1,5 +1,6 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+
 import { api } from "../lib/axios";
 
 interface Transaction {
@@ -36,7 +37,11 @@ export function TransactionProvider({ children }: TransactionProviderProps) {
 
   useEffect(() => {
     if (transactionsResponse) {
-      setTransactions(transactionsResponse);
+      const sortedTransactions = transactionsResponse.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      setTransactions(sortedTransactions);
     }
   }, [transactionsResponse]);
 

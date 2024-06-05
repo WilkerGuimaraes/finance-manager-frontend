@@ -11,6 +11,7 @@ import {
   TransactionType,
   TransactionTypeButton,
 } from "./styles";
+import { api } from "../../lib/axios";
 
 const newTransactionFormSchema = z.object({
   description: z.string(),
@@ -26,16 +27,24 @@ export function NewTransactionModal() {
     control,
     register,
     handleSubmit,
+    reset,
     formState: { isSubmitting },
   } = useForm<NewTransactionFormInputs>({
     resolver: zodResolver(newTransactionFormSchema),
   });
 
   async function handleCreateNewTransaction(data: NewTransactionFormInputs) {
-    // delay 1.5s
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    const { description, price, category, type } = data;
 
-    console.log(data);
+    await api.post("/transactions", {
+      description,
+      price,
+      category,
+      type,
+      createdAt: new Date(),
+    });
+
+    reset();
   }
 
   return (
