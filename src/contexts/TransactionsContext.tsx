@@ -1,5 +1,6 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { api } from "../lib/axios";
 
 interface Transaction {
   id: number;
@@ -25,11 +26,9 @@ export function TransactionProvider({ children }: TransactionProviderProps) {
   const { data: transactionsResponse } = useQuery<Transaction[]>({
     queryKey: ["get-transactions"],
     queryFn: async () => {
-      const data = await fetch("http://localhost:3333/transactions").then(
-        (response) => response.json()
-      );
+      const response = await api.get("/transactions");
 
-      return data;
+      return response.data;
     },
   });
 
