@@ -1,4 +1,4 @@
-import { ReactNode, createContext } from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 interface Transaction {
@@ -12,6 +12,7 @@ interface Transaction {
 
 interface TransactionContextType {
   transactions: Transaction[];
+  filterTransactions: (query: string) => void;
 }
 
 interface TransactionProviderProps {
@@ -32,9 +33,34 @@ export function TransactionProvider({ children }: TransactionProviderProps) {
     },
   });
 
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  useEffect(() => {
+    if (transactionsResponse) {
+      setTransactions(transactionsResponse);
+    }
+  }, [transactionsResponse]);
+
+  const filterTransactions = (query: string) => {
+    if (transactionsResponse) {
+      if (query.trim() === "") {
+        setTransactions(transactionsResponse);
+      } else {
+        const filteredTransactions = transactionsResponse.filter(
+          (transaction) =>
+            transaction.description.toLowerCase().includes(query.toLowerCase())
+        );
+        setTransactions(filteredTransactions);
+      }
+    }
+  };
+
   return (
     <TransactionsContext.Provider
-      value={{ transactions: transactionsResponse || [] }}
+      value={{
+        transactions,
+        filterTransactions,
+      }}
     >
       {children}
     </TransactionsContext.Provider>
