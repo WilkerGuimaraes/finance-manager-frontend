@@ -1,5 +1,7 @@
 ## Preview
 
+https://github.com/WilkerGuimaraes/finance-manager/assets/141461291/83878316-2e81-4d3d-bfe1-1ed71b5fe6c3
+
 # Gerenciador de finanças
 
 ## 📃 Descrição
@@ -18,7 +20,7 @@ Este é um projeto front-end onde foi desenvolvido uma aplicação de gerenciame
 - `json-server`: Este projeto não possui uma API integrada, por isso utiliza o json-server para simular um servidor back-end para fins de teste para armazenar a lista de dados. Os dados ficam salvos no arquivo `server.json`.
 - `axios`: é uma biblioteca popular em JavaScript para fazer requisições HTTP usada para interagir com o json-server.
 
-## Funcionamento
+## ⚙ Funcionamento
 
 - O usuário pode cadastrar uma nova trasação através de um formulário, onde ele define a descrição, o preço, categoria e qual o tipo, podendo ser de "entrada" ou "saída".
 - O usuário pode buscar por transações através de uma caixa de diálogo.
