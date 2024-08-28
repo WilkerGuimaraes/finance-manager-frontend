@@ -1,16 +1,9 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 
 import { api } from "../lib/axios";
-
-interface Transaction {
-  id: number;
-  description: string;
-  type: "income" | "outcome";
-  category: string;
-  price: number;
-  createdAt: string;
-}
+import { Transaction, TransactionsResponse } from "../data/transactions";
 
 interface CreateTransactionInput {
   description: string;
@@ -21,7 +14,9 @@ interface CreateTransactionInput {
 
 interface TransactionContextType {
   transactions: Transaction[];
-  filterTransactions: (query: string) => void;
+  page: number;
+  count: number;
+  pages: number;
   createTransaction: (data: CreateTransactionInput) => Promise<void>;
 }
 
@@ -32,12 +27,33 @@ interface TransactionProviderProps {
 export const TransactionsContext = createContext({} as TransactionContextType);
 
 export function TransactionProvider({ children }: TransactionProviderProps) {
-  const { data: transactionsResponse } = useQuery<Transaction[]>({
-    queryKey: ["get-transactions"],
-    queryFn: async () => {
-      const response = await api.get("/transactions");
+  const [searchParams] = useSearchParams();
 
-      return response.data;
+  const [count, setCount] = useState(0);
+
+  const pages = Math.ceil(count / 20);
+
+  const description = searchParams.get("name") ?? "";
+  const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
+
+  const { data: transactionsResponse } = useQuery<Transaction[]>({
+    queryKey: ["get-transactions", page, description],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+
+      if (description) params.set("description", description);
+      params.set("page", String(page));
+
+      const queryString = params.toString();
+
+      const response = await api.get<TransactionsResponse>(
+        `/transactions?${queryString}`
+      );
+
+      const countResponse = response.data.count;
+      setCount(countResponse);
+
+      return response.data.transactions;
     },
   });
 
@@ -45,27 +61,9 @@ export function TransactionProvider({ children }: TransactionProviderProps) {
 
   useEffect(() => {
     if (transactionsResponse) {
-      const sortedTransactions = transactionsResponse.sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-      setTransactions(sortedTransactions);
+      setTransactions(transactionsResponse);
     }
   }, [transactionsResponse]);
-
-  const filterTransactions = (query: string) => {
-    if (transactionsResponse) {
-      if (query.trim() === "") {
-        setTransactions(transactionsResponse);
-      } else {
-        const filteredTransactions = transactionsResponse.filter(
-          (transaction) =>
-            transaction.description.toLowerCase().includes(query.toLowerCase())
-        );
-        setTransactions(filteredTransactions);
-      }
-    }
-  };
 
   async function createTransaction(data: CreateTransactionInput) {
     const { description, price, category, type } = data;
@@ -85,7 +83,9 @@ export function TransactionProvider({ children }: TransactionProviderProps) {
     <TransactionsContext.Provider
       value={{
         transactions,
-        filterTransactions,
+        page,
+        count,
+        pages,
         createTransaction,
       }}
     >
