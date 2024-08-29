@@ -28,7 +28,6 @@ interface ButtonProps {
 export const Button = styled.button<ButtonProps>`
   width: 35px;
   height: 35px;
-  font-size: 0.5rem;
   border-radius: 8px;
   border: none;
   background-color: ${(props) => props.theme["green-300"]};

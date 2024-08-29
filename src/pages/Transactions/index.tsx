@@ -33,9 +33,9 @@ export function Transactions() {
           <tbody>
             {transactions.map((transaction) => (
               <tr key={transaction.id}>
-                <td width="50%">{transaction.description}</td>
+                <td width="40%">{transaction.description}</td>
                 <td>
-                  <PriceHighlight variant={transaction.type}>
+                  <PriceHighlight $variant={transaction.type}>
                     {transaction.type === "outcome" && "- "}
                     {priceFormatter.format(transaction.price)}
                   </PriceHighlight>
