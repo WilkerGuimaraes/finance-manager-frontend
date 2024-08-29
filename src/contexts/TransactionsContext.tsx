@@ -18,6 +18,7 @@ interface TransactionContextType {
   count: number;
   pages: number;
   createTransaction: (data: CreateTransactionInput) => Promise<void>;
+  deleteTransaction: (id: string) => Promise<void>;
 }
 
 interface TransactionProviderProps {
@@ -89,6 +90,17 @@ export function TransactionProvider({ children }: TransactionProviderProps) {
     },
   });
 
+  const { mutateAsync: deleteTransaction } = useMutation({
+    mutationFn: async (id: string) => {
+      await api.delete(`/transactions/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["get-transactions"],
+      });
+    },
+  });
+
   return (
     <TransactionsContext.Provider
       value={{
@@ -97,6 +109,7 @@ export function TransactionProvider({ children }: TransactionProviderProps) {
         count,
         pages,
         createTransaction,
+        deleteTransaction,
       }}
     >
       {children}

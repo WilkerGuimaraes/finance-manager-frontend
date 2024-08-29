@@ -4,7 +4,7 @@ export interface TransactionsResponse {
 }
 
 export interface Transaction {
-  id: number;
+  id: string;
   description: string;
   type: "income" | "outcome";
   category: string;
