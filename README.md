@@ -1,6 +1,6 @@
 ## Preview
 
-https://github.com/WilkerGuimaraes/finance-manager/assets/141461291/83878316-2e81-4d3d-bfe1-1ed71b5fe6c3
+https://github.com/user-attachments/assets/e9dcaa3d-b449-4c9c-812a-4eaa4175a0ae
 
 # Gerenciador de finanças
 
