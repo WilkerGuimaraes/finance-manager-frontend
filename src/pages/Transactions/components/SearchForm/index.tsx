@@ -2,19 +2,18 @@ import { MagnifyingGlass } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useSearchParams } from "react-router-dom";
 
 import { SearchFormContainer } from "./styles";
-import { useContext } from "react";
-import { TransactionsContext } from "../../../../contexts/TransactionsContext";
 
 const searchFormSchema = z.object({
-  query: z.string(),
+  description: z.string().optional(),
 });
 
 type SearchFormInputs = z.infer<typeof searchFormSchema>;
 
 export function SearchForm() {
-  const { filterTransactions } = useContext(TransactionsContext);
+  const [_, setSearchParams] = useSearchParams();
 
   const {
     register,
@@ -24,8 +23,17 @@ export function SearchForm() {
     resolver: zodResolver(searchFormSchema),
   });
 
-  function handleSearchTransactions(data: SearchFormInputs) {
-    filterTransactions(data.query);
+  function handleSearchTransactions({ description }: SearchFormInputs) {
+    setSearchParams((state) => {
+      if (description) {
+        state.set("page", "1");
+        state.set("description", description);
+      } else {
+        state.delete("description");
+      }
+
+      return state;
+    });
   }
 
   return (
@@ -33,7 +41,7 @@ export function SearchForm() {
       <input
         type="text"
         placeholder="Busque por transações"
-        {...register("query")}
+        {...register("description")}
       />
 
       <button type="submit" disabled={isSubmitting}>

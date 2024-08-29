@@ -33,7 +33,7 @@ export function TransactionProvider({ children }: TransactionProviderProps) {
 
   const pages = Math.ceil(count / 10);
 
-  const description = searchParams.get("name") ?? "";
+  const description = searchParams.get("description") ?? "";
   const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
 
   const { data: transactionsResponse } = useQuery<Transaction[]>({
