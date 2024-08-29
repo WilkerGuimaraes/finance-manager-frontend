@@ -31,7 +31,7 @@ export function TransactionProvider({ children }: TransactionProviderProps) {
 
   const [count, setCount] = useState(0);
 
-  const pages = Math.ceil(count / 20);
+  const pages = Math.ceil(count / 10);
 
   const description = searchParams.get("name") ?? "";
   const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;

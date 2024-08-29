@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { Header } from "../../components/Header";
 import { SearchForm } from "./components/SearchForm";
 import { Summary } from "../../components/Summary";
+import { Pagination } from "../../components/Pagination";
 
 import { TransactionsContext } from "../../contexts/TransactionsContext";
 import { dateFormater, priceFormatter } from "../../utils/formatter";
@@ -14,7 +15,7 @@ import {
 } from "./styles";
 
 export function Transactions() {
-  const { transactions } = useContext(TransactionsContext);
+  const { transactions, page, count, pages } = useContext(TransactionsContext);
 
   return (
     <div>
@@ -41,6 +42,14 @@ export function Transactions() {
             ))}
           </tbody>
         </TransactionTable>
+        {transactions && (
+          <Pagination
+            transactions={transactions}
+            page={page}
+            items={count}
+            pages={pages}
+          />
+        )}
       </TransationContainer>
     </div>
   );
