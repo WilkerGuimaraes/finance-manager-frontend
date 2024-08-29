@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import { api } from "../lib/axios";
@@ -65,19 +65,29 @@ export function TransactionProvider({ children }: TransactionProviderProps) {
     }
   }, [transactionsResponse]);
 
-  async function createTransaction(data: CreateTransactionInput) {
-    const { description, price, category, type } = data;
+  const queryClient = useQueryClient();
 
-    const response = await api.post("/transactions", {
+  const { mutateAsync: createTransaction } = useMutation({
+    mutationFn: async ({
       description,
       price,
       category,
       type,
-      createdAt: new Date(),
-    });
-
-    setTransactions((state) => [response.data, ...state]);
-  }
+    }: CreateTransactionInput) => {
+      await api.post("/transactions", {
+        description,
+        price,
+        category,
+        type,
+        createdAt: new Date(),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["get-transactions"],
+      });
+    },
+  });
 
   return (
     <TransactionsContext.Provider
